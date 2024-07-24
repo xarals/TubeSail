@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+    <head>
+        <title>TubeSail</title>
+        <link rel="icon" href="/favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <meta name="description" content="TubeSail offers the fastest way to download YouTube videos to your computer or phone, and all saved files will be in the highest quality. Choose a convenient method, download videos or audio from YouTube and create your own personal video library on your computer.">
+        <meta name='keywords' content='youtube download video save'>  <meta property="og:type" content="website" />
+        <meta property="og:description" content="TubeSail offers the fastest way to download YouTube videos to your computer or phone, and all saved files will be in the highest quality. Choose a convenient method, download videos or audio from YouTube and create your own personal video library on your computer." />
+        <link href="https://fonts.googleapis.com/css2?family=Bona+Nova+SC:ital,wght@0,400;0,700;1,400&family=Playwrite+HR:wght@100..400&display=swap" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+        <style>
+            h1 {
+                height: 100%;
+                margin: 0;
+                display: grid;
+                place-items: center;
+            }
+            h4 {
+                height: 100%;
+                margin: 0;
+                display: grid;
+                place-items: center;
+            }
+            .ellipsis {
+                width: 600px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+               }
+        </style>
+    </head>
+
+    <body>
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 20px; box-sizing: border-box; min-height: 100vh; overflow: hidden; display: flex; flex-direction: column;">
+
+            <header th:insert="blocks/header :: header"/>
+
+            <h1 class="mt-4 mb-4">Download video from YouTube</h1>
+
+            <div style="max-width: 600px; margin: 0 auto; padding: 0 20px; box-sizing: border-box;">
+                <form id="searchVideoForm" th:action="@{/api/youtube/search}" method="post">
+                    <div class="input-group mb-3">
+                        <input type="text" id="searchText" class="form-control" style="width: 400px" placeholder="Enter video link here" aria-label="Enter video link here" aria-describedby="button-addon2">
+                        <button class="btn btn-danger" type="submit" id="button-addon2">Search</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="result"></div>
+
+            <div class="mt-5" style="display: flex; align-items: center;">
+                <div style="flex: 1; padding: 10px">
+                    <p>YouTube, the leading video hosting platform, is the third most popular website in the world. One of the key factors to its success is its ease of use and intuitive interface. However, users may encounter difficulties when trying to download videos from YouTube, since the site's standard features do not always make this process convenient.</p>
+                    <p>We offer the most convenient and fastest way to download videos from YouTube to your computer, smartphone or tablet without the need to install additional programs. With our service you can save video content in the best available quality. You can easily download music and videos from YouTube without registration and create your own personal video collection on any device, be it a PC or a mobile gadget.</p>
+                </div>
+                <div style="flex: 0 0 auto; padding: 10px">
+                    <img src="/images/youtube.png" style="max-width: 100%; height: auto; display: block" alt="YouTube">
+                </div>
+            </div>
+            <footer style="margin-top: auto" th:insert="blocks/footer :: footer"/>
+        </div>
+        <script>
+            document.getElementById('searchVideoForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                const url = document.getElementById('searchText').value;
+
+                fetch('/api/youtube/search', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'url=' + encodeURIComponent(url),
+                })
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('result').innerHTML = html;
+                });
+            });
+        </script>
+        <script>
+            function downloadFile() {
+                const videoUrl = document.querySelector('select[name="selectQuality"]').value;
+                const fileName = document.getElementById("download").getAttribute("data-param1");
+                const audioUrl = document.getElementById("download").getAttribute("data-param2");
+                const url = `/download?fileName=${encodeURIComponent(fileName)}&videoUrl=${encodeURIComponent(videoUrl)}&audioUrl=${encodeURIComponent(audioUrl)}`;
+
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', fileName);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        </script>
+    </body>
+</html>
