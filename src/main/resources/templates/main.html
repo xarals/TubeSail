@@ -84,10 +84,16 @@
         </script>
         <script>
             function downloadFile() {
-                const videoUrl = document.querySelector('select[name="selectQuality"]').value;
+                const selectElement = document.querySelector('select[name="selectQuality"]');
+                const selectedOption = selectElement.options[selectElement.selectedIndex];
+                const videoUrl = selectElement.value;
+                const quality = selectedOption.text;
                 const fileName = document.getElementById("download").getAttribute("data-param1");
                 const audioUrl = document.getElementById("download").getAttribute("data-param2");
-                const url = `/download?fileName=${encodeURIComponent(fileName)}&videoUrl=${encodeURIComponent(videoUrl)}&audioUrl=${encodeURIComponent(audioUrl)}`;
+                const videoId = document.getElementById("download").getAttribute("data-param3");
+                const image = document.getElementById("download").getAttribute("data-param4");
+                const length = document.getElementById("download").getAttribute("data-param5");
+                const url = `/download?fileName=${encodeURIComponent(fileName)}&videoUrl=${encodeURIComponent(videoUrl)}&audioUrl=${encodeURIComponent(audioUrl)}&videoId=${encodeURIComponent(videoId)}&image=${encodeURIComponent(image)}&quality=${encodeURIComponent(quality)}&length=${encodeURIComponent(length)}`;
 
                 const link = document.createElement('a');
                 link.href = url;

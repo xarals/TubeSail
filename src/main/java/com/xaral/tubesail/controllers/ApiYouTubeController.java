@@ -133,6 +133,7 @@ public class ApiYouTubeController {
         sizes.put(audioQuality, youTubeData.getAudioSize());
         urls.put(audioQuality, youTubeData.getAudioUrl());
 
+        model.addAttribute("videoId", videoId);
         model.addAttribute("qualities", qualities);
         model.addAttribute("sizes", sizes);
         model.addAttribute("urls", urls);

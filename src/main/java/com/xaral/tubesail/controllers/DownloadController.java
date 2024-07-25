@@ -6,10 +6,17 @@ import com.github.kiulian.downloader.downloader.request.RequestVideoInfo;
 import com.github.kiulian.downloader.downloader.response.Response;
 import com.github.kiulian.downloader.model.videos.VideoInfo;
 import com.github.kiulian.downloader.model.videos.formats.Format;
+import com.xaral.tubesail.domain.DownloadHistory;
+import com.xaral.tubesail.domain.User;
 import com.xaral.tubesail.download.MultiThreadedDownload;
+import com.xaral.tubesail.repositories.DownloadHistoryRepository;
+import com.xaral.tubesail.repositories.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,14 +29,32 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @Controller
 public class DownloadController {
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private DownloadHistoryRepository downloadHistoryRepository;
+
     private final String ffmpegPath = "ffmpeg";
 
     @GetMapping("/download")
     public void downloadYouTube(@RequestParam("fileName") String fileName,
                                 @RequestParam("videoUrl") String videoUrl,
                                 @RequestParam("audioUrl") String audioUrl,
+                                @RequestParam("videoId") String videoId,
+                                @RequestParam("image") String image,
+                                @RequestParam("quality") String quality,
+                                @RequestParam("length") String length,
                                 HttpServletResponse response, HttpServletRequest request) throws IOException {
         long time = System.currentTimeMillis();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+            try {
+                User user = userRepository.findByUsername(auth.getName()).orElseThrow();
+                DownloadHistory downloadHistory = new DownloadHistory(user, videoId, image, fileName, quality, length, time, true);
+                downloadHistoryRepository.save(downloadHistory);
+            } catch (Exception ignore) {}
+        }
         if (videoUrl.equals(audioUrl)) {
             response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + ".m4a\"");
             response.setContentType("audio/mp4");

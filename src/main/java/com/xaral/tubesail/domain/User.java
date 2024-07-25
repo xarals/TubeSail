@@ -2,6 +2,7 @@ package com.xaral.tubesail.domain;
 
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -15,6 +16,9 @@ public class User {
     private boolean activity;
     private String roles;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DownloadHistory> downloadHistory;
+
     public User() {}
 
     public User(String username, String password) {
@@ -26,10 +30,6 @@ public class User {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getUsername() {

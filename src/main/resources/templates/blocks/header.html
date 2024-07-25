@@ -1,5 +1,17 @@
-<nav th:fragment="header" class="navbar navbar-expand-lg bg-body-tertiary" xmlns:th="http://www.w3.org/1999/xhtml">
+<nav th:fragment="header" class="navbar navbar-expand-lg" xmlns:th="http://www.w3.org/1999/xhtml"
+     xmlns:sec="http://www.w3.org/1999/xhtml">
     <div class="container-fluid">
         <a class="navbar-brand" style="font-family: 'Bona Nova SC', serif; font-size: 36px" href="/">TubeSail</a>
+    </div>
+    <div class="d-flex" style="min-width: 100px">
+        <a sec:authorize="!isAuthenticated()" class="btn btn-light my-2 my-sm-0" href="/login">Sign In</a>
+        <div sec:authorize="isAuthenticated()" class="nav-item dropdown">
+            <a class="btn btn-light my-2 my-sm-0 dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" th:text="${username} + ' '" />
+            <div class="dropdown-menu dropdown-menu-end">
+                <a class="dropdown-item" href="/history">History</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/logout">Sign Out</a>
+            </div>
+        </div>
     </div>
 </nav>

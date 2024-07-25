@@ -46,7 +46,7 @@ public class SecurityConfig {
                         .ignoringRequestMatchers("/api/**")
                 )
                 .authorizeHttpRequests((requests) -> requests
-
+                        .requestMatchers("/history", "/history/**").authenticated()
                         .anyRequest().permitAll()
                 )
                 .formLogin((form) -> form
