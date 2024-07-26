@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -26,7 +27,8 @@ public class HistoryController {
     public String history(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByUsername(auth.getName()).orElseThrow();
-        List<DownloadHistory> downloadHistories = downloadHistoryRepository.findByUser(user);
+        List<DownloadHistory> downloadHistories = user.getDownloadHistory();
+        Collections.reverse(downloadHistories);
         model.addAttribute("downloadHistories", downloadHistories);
         return "history";
     }

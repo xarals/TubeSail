@@ -46,6 +46,7 @@ public class SecurityConfig {
                         .ignoringRequestMatchers("/api/**")
                 )
                 .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers("/users", "/users/**").hasRole("MODERATOR")
                         .requestMatchers("/history", "/history/**").authenticated()
                         .anyRequest().permitAll()
                 )

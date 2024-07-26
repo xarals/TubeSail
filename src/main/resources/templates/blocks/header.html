@@ -3,11 +3,12 @@
     <div class="container-fluid">
         <a class="navbar-brand" style="font-family: 'Bona Nova SC', serif; font-size: 36px" href="/">TubeSail</a>
     </div>
-    <div class="d-flex" style="min-width: 100px">
+    <div class="d-flex me-1" style="min-width: 100px">
         <a sec:authorize="!isAuthenticated()" class="btn btn-light my-2 my-sm-0" href="/login">Sign In</a>
         <div sec:authorize="isAuthenticated()" class="nav-item dropdown">
             <a class="btn btn-light my-2 my-sm-0 dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" th:text="${username} + ' '" />
             <div class="dropdown-menu dropdown-menu-end">
+                <a th:if="${highRole != null && !highRole.equals('User')}" class="dropdown-item" href="/users">Users</a>
                 <a class="dropdown-item" href="/history">History</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="/logout">Sign Out</a>
