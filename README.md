@@ -4,6 +4,6 @@ TubeSail is a web application written in Java Spring for downloading videos from
 
 The project also implements registration and authorization using Spring Security. A system of roles with different rights is used for moderation and control of employees. There is an option to view the history of downloaded files.
 
-All data is stored in the MySKL database, which is accessed via Hibernate.
+All data is stored in the MySQL database, which is accessed via Hibernate.
 
 https://tubesail.pp.ua
